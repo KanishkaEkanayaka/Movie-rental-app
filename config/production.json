@@ -1,0 +1,6 @@
+{
+    "name":"My App - Production",
+    "database":{
+        "host": "production-db"
+    }
+}
