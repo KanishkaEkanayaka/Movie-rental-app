@@ -1,5 +1,6 @@
 const {Customer, validate} = require('../models/customer');
 const express = require('express');
+const auth = require('../middleware/auth'); //authentication middleware to check whether the user is valid using JWT.
 const mongoose = require('mongoose');
 const config = require('config');
 const debug = require('debug')('app:customers');
@@ -22,7 +23,7 @@ router.get('/:id',async (req,res)=>{
     
 });
 
-router.post('/',async(req, res)=>{
+router.post('/',auth,async(req, res)=>{
 
     const result = validate(req.body);
 
@@ -48,7 +49,7 @@ router.post('/',async(req, res)=>{
     }
 });
 
-router.put('/:id',async(req,res)=>{
+router.put('/:id', auth,async(req,res)=>{
 
     // validating the inputs from the body
     const result = validate(req.body);
@@ -67,7 +68,7 @@ router.put('/:id',async(req,res)=>{
 
 });
 
-router.delete('/:id',async(req, res)=>{
+router.delete('/:id',auth,async(req, res)=>{
     try{
         const customer = await Customer.findByIdAndRemove(req.params.id);
         if(!customer)return res.status(400).send("Requested customer not available");

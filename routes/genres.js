@@ -1,5 +1,6 @@
 const express = require('express');
 const {Genre, validate} = require('../models/genre');
+const auth = require('../middleware/auth');
 const mongoose = require('mongoose');
 const config = require('config');
 const debug = require('debug')('app:genres');
@@ -11,7 +12,7 @@ router.get('/',async (req, res)=>{
     res.send(genres);
 });
 
-router.get('/:id',async (req,res)=>{
+router.get('/:id',auth,async (req,res)=>{
     try{
         const genre = await Genre.findById(req.params.id);
         if(!genre) return res.status(400).send("Requested genre not available");
@@ -23,7 +24,7 @@ router.get('/:id',async (req,res)=>{
 
 });
 
-router.post('/',async(req, res)=>{
+router.post('/',auth, async(req, res)=>{
 
     const result = validate(req.body);
 
@@ -47,7 +48,7 @@ router.post('/',async(req, res)=>{
     }
 });
 
-router.put('/:id',async(req,res)=>{
+router.put('/:id',auth,async(req,res)=>{
 
     // validating the inputs from the body
     const result = validate(req.body);
@@ -71,7 +72,7 @@ router.put('/:id',async(req,res)=>{
 
 });
 
-router.delete('/:id',async(req, res)=>{
+router.delete('/:id',auth,async(req, res)=>{
     try{
         const genre = await Genre.findByIdAndRemove(req.params.id)
 

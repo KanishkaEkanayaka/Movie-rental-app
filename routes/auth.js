@@ -1,9 +1,7 @@
 const express = require('express');
-const jwt = require('jsonwebtoken'); //work with jwt
 const _ = require('lodash');
 const {User} = require('../models/user');
 const mongoose = require('mongoose');
-const config = require('config');
 const Joi = require('joi');
 const debug = require('debug')('app:auth');
 const bcrypt = require('bcrypt');
@@ -30,8 +28,8 @@ router.post('/',async(req, res)=>{
     if(!validPassword) return res.status(400).send("Inavalid email or password");
 
     //creating jwt token
-    const token = jwt.sign({_id:user._id},config.get('jwt.privateKey'));
-    res.send(token);
+    const token = user.generateAuthToken();
+    res.header('x-auth-token',token).send(user);
 
 });
 

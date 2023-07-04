@@ -1,6 +1,8 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 const JoiOid = require('joi-oid');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -23,6 +25,12 @@ const userSchema = new mongoose.Schema({
         maxlength:1024 //after hashed maximum characters are 1024 so need to provide less than 1024 characters to hash
     }
 });
+
+//adding method to the userSchema to generate JWT(authentication token).
+userSchema.methods.generateAuthToken = function(){
+    const token = jwt.sign({_id:this._id},config.get('jwt.privateKey'));
+    return token;
+}
 
 const User = mongoose.model('User',userSchema);
 

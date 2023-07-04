@@ -2,7 +2,6 @@ const express = require('express');
 const _ = require('lodash');
 const {User, validate} = require('../models/user');
 const mongoose = require('mongoose');
-const config = require('config');
 const debug = require('debug')('app:users');
 const bcrypt = require('bcrypt');
 
@@ -29,10 +28,13 @@ router.post('/',async(req, res)=>{
     user.password = await bcrypt.hash(user.password,salt);
 
     try{
-        const result = await user.save();
-        debug(result + ' User saved');
+        await user.save();
+        debug(user + ' User saved');
 
-        res.send(_.pick(result,['name','email']));
+        //when the user registered, we send them a jason web token in the header of the response
+        const token = user.generateAuthToken();
+        res.header('x-auth-token',token).send(_.pick(user,['name','email']));
+
     }catch(ex){
         for(errField in ex.errors){
             console.log(ex.errors[errField].message);
