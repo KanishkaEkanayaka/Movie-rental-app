@@ -1,5 +1,8 @@
 {
     "database":{
         "location":"database_location"
+    },
+    "jwt":{
+        "privateKey":"vidly_jwt_private_key"
     }
 }
