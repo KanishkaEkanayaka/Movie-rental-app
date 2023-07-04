@@ -29,7 +29,7 @@ router.post('/',async(req, res)=>{
 
     //creating jwt token
     const token = user.generateAuthToken();
-    res.header('x-auth-token',token).send(user);
+    res.header('x-auth-token',token).send(_.pick(user,['name','email']));
 
 });
 
