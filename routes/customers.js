@@ -57,25 +57,21 @@ router.put('/:id', auth,async(req,res)=>{
         res.status(400).send(result.error.message);
         return;
     }
-    try{
         const customer = await Customer.findByIdAndUpdate(req.params.id,{name:req.body.name,phone:req.body.phone},{new:true});
         if(!customer)return res.status(400).send("Requested customer not available");
         res.send(customer);
-    }catch(ex){
-        res.status(400).send('Requested customer not available');
-    }
+    
    
 
 });
 
 router.delete('/:id',auth,async(req, res)=>{
-    try{
+    
         const customer = await Customer.findByIdAndRemove(req.params.id);
         if(!customer)return res.status(400).send("Requested customer not available");
         res.send(customer);
-    }catch(ex){
+
         res.status(400).send('Requested customer not available');
-    }
 });
 
 module.exports = router;

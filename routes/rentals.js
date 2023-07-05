@@ -1,6 +1,7 @@
 const {Rental, validate} = require('../models/rental'); 
 const {Movie} = require('../models/movie'); 
 const auth = require('../middleware/auth');
+const asyncMiddleware = require('../middleware/async');
 const config = require('config');
 const {Customer} = require('../models/customer'); 
 //deprecated const Fawn = require('fawn');//library implmented from two face commit to manage transactions
@@ -50,7 +51,7 @@ router.post('/',auth,async (req, res) => {
       await session.withTransaction(async () => {
         const result = await rental.save();
         movie.numberInStock--;
-        movie.save();
+        await movie.save();
         res.send(result);
       });
       session.endSession();

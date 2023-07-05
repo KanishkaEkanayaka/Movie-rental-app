@@ -13,7 +13,7 @@ router.get('/',async (req, res)=>{
     res.send(users);
 });
 
-router.post('/',async(req, res)=>{
+router.post('/', async(req, res)=>{
 
     const { error } = validate(req.body);
 

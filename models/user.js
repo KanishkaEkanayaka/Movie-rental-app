@@ -23,12 +23,13 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength:16,
         maxlength:1024 //after hashed maximum characters are 1024 so need to provide less than 1024 characters to hash
-    }
+    },
+    isAdmin:Boolean
 });
 
 //adding method to the userSchema to generate JWT(authentication token).
 userSchema.methods.generateAuthToken = function(){
-    const token = jwt.sign({_id:this._id},config.get('jwt.privateKey'));
+    const token = jwt.sign({_id:this._id, isAdmin: this.isAdmin},config.get('jwt.privateKey'));
     return token;
 }
 
@@ -44,10 +45,11 @@ function validateUser(user){
         .min(8)
         .max(25)
         .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, 
-        'password')
+        'password'),
+        isAdmin:Boolean
     });
 
-    return schema.validate({name:user.name,email:user.email,password:user.password});
+    return schema.validate({name:user.name,email:user.email,password:user.password,isAdmin:user.isAdmin});
 }
 
 exports.User = User;

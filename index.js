@@ -1,3 +1,4 @@
+require('express-async-errors');
 const express = require('express');
 const Joi = require('joi');
 const genres = require('./routes/genres');
@@ -6,6 +7,7 @@ const movies = require('./routes/movies');
 const rentals = require('./routes/rentals');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
+const error = require('./middleware/error');
 const config = require('config');
 const debug = require('debug')('app:db');
 const mongoose = require('mongoose');
@@ -35,6 +37,9 @@ app.use('/api/movies',movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users',users);
 app.use('/api/auth',auth);
+
+//error middleware
+app.use(error);
 
 const port = process.env.PORT || 3000;
 
