@@ -1,6 +1,7 @@
 {
     "name":"My App - Development",
     "database": {
-        "host": "development-db"
+        "host": "development-db",
+        "location" : "database_location"
     }
 }

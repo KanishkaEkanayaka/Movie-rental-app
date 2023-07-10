@@ -1,6 +1,14 @@
 {
     "name":"My Application",
+    "database":{
+        "location":"database_location"
+    },
     "jwt":{
         "privateKey":""
+    },
+    "winston":{
+        "timeZone":"",
+        "log-level":"",
+        "database-location":""
     }
 }

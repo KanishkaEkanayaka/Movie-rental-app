@@ -1,6 +1,7 @@
 {
     "name":"My App - Production",
     "database":{
-        "host": "production-db"
+        "host": "production-db",
+        "location":"database_location"
     }
 }

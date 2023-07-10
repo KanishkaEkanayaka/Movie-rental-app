@@ -4,5 +4,10 @@
     },
     "jwt":{
         "privateKey":"vidly_jwt_private_key"
+    },
+    "winston":{
+        "timeZone":"timeZone",
+        "log-level":"LOG_LEVEL",
+        "database-location":"log_db"
     }
 }

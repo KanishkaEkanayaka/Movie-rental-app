@@ -1,0 +1,6 @@
+{
+    "name":"My Application-Test",
+    "database":{
+        "location":"database_location"
+    }
+}

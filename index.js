@@ -1,49 +1,23 @@
 require('express-async-errors');
+const {logger,logInfo} = require('./startup/logger');
+
 const express = require('express');
-const Joi = require('joi');
-const genres = require('./routes/genres');
-const customers = require('./routes/customers.js')
-const movies = require('./routes/movies');
-const rentals = require('./routes/rentals');
-const users = require('./routes/users');
-const auth = require('./routes/auth');
-const error = require('./middleware/error');
-const config = require('config');
-const debug = require('debug')('app:db');
-const mongoose = require('mongoose');
-
 const app = express();
-app.use(express.json());
 
-//check whether the jwt.private key is set. otherwise exit the program
-if(!config.get('jwt.privateKey')){
-    console.error('FATAL ERROR: jwt.privateKey not defined');
-    process.exit(1);
-}
+require('./startup/config')();
+//call all the routes
+require('./startup/routes')(app);
+require('./startup/db')();
 
-//check whether the database.location is set. otherwise exit the program
-if(!config.get('database.location')){
-    console.error('FATAL ERROR: database.location not defined');
-    process.exit(1);
-}
 
-mongoose.connect(config.get('database.location'))
-    .then(debug('Database Connected'))
-    .catch((err)=>(debug('Database connection failed..')));
-
-app.use('/api/genres',genres);
-app.use('/api/customers', customers);
-app.use('/api/movies',movies);
-app.use('/api/rentals', rentals);
-app.use('/api/users',users);
-app.use('/api/auth',auth);
-
-//error middleware
-app.use(error);
+//these things used for the test the logging of uncaught rejections and exceptions events
+//  const p = Promise.reject(new Error('Something failed'));
+//  p.then(()=>{console.log('ok')});
+// throw new Error('uncaught error');
 
 const port = process.env.PORT || 3000;
 
 app.listen(port,()=>{
-    console.log(`server is listening on port ${port}`);
+    logInfo(`server is listening on port ${port}`);
 });
 
