@@ -1,5 +1,6 @@
 const express = require('express');
 const {Genre, validate} = require('../models/genre');
+const validateObjectId = require('../middleware/validateObjectId');
 const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');//admin middleware to check whether the given user is an admin
 const mongoose = require('mongoose');
@@ -16,12 +17,11 @@ router.get('/',async (req, res)=>{
     
 });
 
-router.get('/:id',auth,async (req,res)=>{
+router.get('/:id',validateObjectId,async (req,res)=>{
         const genre = await Genre.findById(req.params.id);
         if(!genre) return res.status(400).send("Requested genre not available");
     
         res.send(genre);
-
 });
 
 router.post('/',auth, async(req, res)=>{
@@ -33,22 +33,17 @@ router.post('/',auth, async(req, res)=>{
         return;
     }
 
-    const genre = new Genre({
+    let genre = new Genre({
         name:req.body.name
     });
 
-    try{
-        const result = await genre.save();
-        debug(result + ' Genre saved');
-        res.send(result);
-    }catch(ex){
-        for(errField in ex.errors){
-            console.log(ex.errors[errField].message);
-        }
-    }
+        genre = await genre.save();
+        debug(genre + ' Genre saved');
+        res.send(genre);
+    
 });
 
-router.put('/:id',auth,async(req,res)=>{
+router.put('/:id',[validateObjectId,auth],async(req,res)=>{
 
     // validating the inputs from the body
     const result = validate(req.body);
@@ -69,7 +64,7 @@ router.put('/:id',auth,async(req,res)=>{
 
 //To delete genre there should be valid JWT or authentication and authenticated JWT must contain isAdmin property set to true
 //We check the user is authenticated and he is a admin
-router.delete('/:id',[auth,admin],async(req, res)=>{
+router.delete('/:id',[validateObjectId,auth,admin],async(req, res)=>{
     
         const genre = await Genre.findByIdAndRemove(req.params.id)
 

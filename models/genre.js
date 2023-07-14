@@ -15,7 +15,7 @@ const Genre = mongoose.model('Genre',genreSchema);
 function validateGenre(genre){
     // validating the inputs from the body
     const schema = Joi.object({
-        genre: Joi.string().min(3).required()
+        genre: Joi.string().min(3).max(50).required()
     });
 
     return schema.validate({genre:genre.name});
